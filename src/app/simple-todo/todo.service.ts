@@ -4,7 +4,6 @@ import { Store } from '../libs/store'
 import { TodoState, Todo, FILTER } from './todo'
 import 'rxjs/add/operator/share'
 
-
 @Injectable()
 export class TodoService extends Store<TodoState> {
   increment: number
@@ -17,7 +16,7 @@ export class TodoService extends Store<TodoState> {
   /**
    * Observable of list of todo displaying to the user
    * filtering will be applied before emitting
-   * 
+   *
    * this filter depends on state.todos and state.showCompleted
    * so, we need to watch for these values changes before applying the filter
    */
@@ -66,7 +65,7 @@ export class TodoService extends Store<TodoState> {
   }
 
   setFilter(filter: number) {
-    if (Object.values(FILTER).indexOf(filter) !== -1) {
+    if ((<any>Object).values(FILTER).indexOf(filter) !== -1) {
       this.setState({ filter })
     }
   }

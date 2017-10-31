@@ -13,7 +13,7 @@
   <ng-container *ngIf="filter$ | async as filter">
     <ul>
       <li><a href="#" [class.active]="filter==FILTER.ALL" (click)="filterAll()">ALL ({{ count.all }})</a></li>
-      <li><a href="#" [class.active]="filter==FILTER.UNCOMPLETED" (click)="filterUncompleted()">UNCOMPLETED ({{ count.uncompleted }})</a></li>
+      <li><a href="#" [class.active]="filter==FILTER.UNCOMPLETED" (click)="filterUncompleted()">ACTIVE ({{ count.uncompleted }})</a></li>
       <li><a href="#" [class.active]="filter==FILTER.COMPLETED" (click)="filterCompleted()">COMPLETED ({{ count.completed }})</a></li>
     </ul>
   </ng-container>
