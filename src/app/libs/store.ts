@@ -6,7 +6,14 @@ import { diff } from 'deep-object-diff';
 import 'rxjs/add/operator/map'
 import 'rxjs/add/operator/distinctUntilChanged'
 
-declare type StoreOptions = {[s: string]: any}
+declare type StoreOptions = {
+  debug?: boolean
+  collapsed?: boolean
+  prev?: boolean
+  next?: boolean
+  current?: boolean
+  colors?: { [s: string]: string }
+} & { [s: string]: any }
 
 export abstract class Store<T extends Object> extends Observable<T> {
   private state$: BehaviorSubject<T>
@@ -15,12 +22,25 @@ export abstract class Store<T extends Object> extends Observable<T> {
   constructor(initialState: T = null, options: StoreOptions = {}) {
     const state = Object.assign({}, initialState)
     const state$ = new BehaviorSubject<T>(state)
-    // any time state$ emit new value (publish will call state$.next), notify observable
     super(observer => {
       state$.subscribe(observer)
     })
     this.state$ = state$
-    this.options = Object.assign({}, { debug: true }, options)
+    this.options = Object.assign({}, Store.defaultOptions, options)
+  }
+
+  static defaultOptions: StoreOptions = {
+    debug: true,
+    collapsed: true,
+    prev: true,
+    next: true,
+    current: true,
+    colors: {
+      prev: '#9E9E9E',
+      next: '#4CAF50',
+      current: '#FF0000',
+    },
+    stackTraceOffset: 4
   }
 
   /**
@@ -44,22 +64,33 @@ export abstract class Store<T extends Object> extends Observable<T> {
    */
   setState(patch: Partial<T>) {
     const state = Object.assign({}, this.state, patch)
-    if (this.options.debug) {
-      const colors = { prevState: '#9E9E9E', nextState: '#4CAF50' }
-      const action = this.getCallerFunction()
-      const stateDiff = {
-        prev: diff(state, this.state),
-        next: diff(this.state, state)
-      }
-      const timestamp = now()
-      // tslint:disable-next-line:no-console
-      console.group(`${timestamp} [${this.constructor.name}.${action}]`);
-      console.log(`%c ${padStart('prev state:', 15, ' ')}`, `color: ${colors.prevState}; font-weight: bold`, stateDiff.prev);
-      console.log(`%c ${padStart('next state:', 15, ' ')}`, `color: ${colors.nextState}; font-weight: bold`, stateDiff.next);
-      console.log(`%c ${padStart('current state:', 15, ' ')}`, `color: ${colors.nextState}; font-weight: bold`, state);
-      console.groupEnd();
-    }
+    this.debug(state)
     this.state$.next(state)
+  }
+
+  debug(state: T) {
+    if (!this.options.debug) return
+    const colors = this.options.colors
+    const action = this.getCallerFunction()
+    const timestamp = now()
+    const changed = !isEqual(state, this.state)
+    const notice = "STATES ARE EQUAL"
+    const stateDiff = {
+      prev: changed ? diff(state, this.state) : '-',
+      next: changed ? diff(this.state, state) : '-',
+    }
+
+    // depends on options, sometimes we only want to see actions flow
+    const group = this.options.collapsed ? console.groupCollapsed : console.group
+    // tslint:disable-next-line:no-console
+    group.call(console, `${timestamp} [${this.constructor.name}.${action}] ${changed ? '' : notice}`)
+    if (this.options.prev)
+      console.log(`%c ${padStart('prev state:', 15, ' ')}`, `color: ${colors.prev}; font-weight: bold`, stateDiff.prev);
+    if (this.options.next)
+      console.log(`%c ${padStart('next state:', 15, ' ')}`, `color: ${colors.next}; font-weight: bold`, stateDiff.next);
+    if (this.options.current)
+      console.log(`%c ${padStart('current state:', 15, ' ')}`, `color: ${colors.current}; font-weight: bold`, state);
+    console.groupEnd();
   }
 
   /**
@@ -85,12 +116,13 @@ export abstract class Store<T extends Object> extends Observable<T> {
   }
 
   private getCallerFunction() {
+    const offset = Store.defaultOptions.stackTraceOffset
     let action = '[unknown]'
     try {
       throw new Error();
     } catch (e) {
       try {
-        action = e.stack.split('at ')[3].split(' ')[0].match(/\w+$/)[0]
+        action = e.stack.split('at ')[offset].split(' ')[0].match(/\w+$/)[0]
         // console.log(e.stack);
       } catch (e) { }
     }

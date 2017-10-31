@@ -26,7 +26,7 @@ export class TodoService extends Store<TodoState> {
       search: state.search
     }))
     .map(this.applyFilter)
-    .share()
+    // .share()
 
   /**
    * Observable of TodoCounter
@@ -36,10 +36,10 @@ export class TodoService extends Store<TodoState> {
       completed: state.todos.filter(todo => todo.completed).length,
       uncompleted: state.todos.filter(todo => !todo.completed).length,
     }))
-    .share()
+    // .share()
 
   readonly filter$ = this.select(state => state.filter)
-    .share()
+    // .share()
 
   addTodo(title: string) {
     const todos = [...this.state.todos, new Todo(this.increment++, title)]
