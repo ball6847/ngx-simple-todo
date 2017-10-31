@@ -3121,6 +3121,14 @@ mkdirp@0.5.x, "mkdirp@>=0.5 0", mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.5.0, mkd
   dependencies:
     minimist "0.0.8"
 
+mobx-logger@^0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/mobx-logger/-/mobx-logger-0.6.0.tgz#caa2d4a65257aa0a782d6f884e6207b834408122"
+
+mobx@^3.3.1:
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/mobx/-/mobx-3.3.1.tgz#c38fc1a287a0dda3f5d4b85efe1137fedd9dcdf0"
+
 ms@0.7.1:
   version "0.7.1"
   resolved "https://registry.yarnpkg.com/ms/-/ms-0.7.1.tgz#9cd13c03adbff25b65effde7ce864ee952017098"
