@@ -5,6 +5,9 @@ import { TodoState, Todo, FILTER } from './todo'
 
 @Injectable()
 export class TodoService extends Store<TodoState> {
+  /**
+   * keep track of todo id
+   */
   increment: number
 
   constructor() {
