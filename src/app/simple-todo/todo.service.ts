@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core'
 import { Observable } from 'rxjs/Observable'
 import { Store } from '../libs/store'
 import { TodoState, Todo, FILTER } from './todo'
-import 'rxjs/add/operator/share'
 
 @Injectable()
 export class TodoService extends Store<TodoState> {
@@ -26,7 +25,6 @@ export class TodoService extends Store<TodoState> {
       search: state.search
     }))
     .map(this.applyFilter)
-    // .share()
 
   /**
    * Observable of TodoCounter
@@ -36,10 +34,8 @@ export class TodoService extends Store<TodoState> {
       completed: state.todos.filter(todo => todo.completed).length,
       uncompleted: state.todos.filter(todo => !todo.completed).length,
     }))
-    // .share()
 
   readonly filter$ = this.select(state => state.filter)
-    // .share()
 
   addTodo(title: string) {
     const todos = [...this.state.todos, new Todo(this.increment++, title)]
