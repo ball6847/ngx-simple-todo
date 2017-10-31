@@ -8,16 +8,11 @@
   </p>
 </form>
 
-<!-- ugly but work -->
-<ng-container *ngIf="count$ | async as count">
-  <ng-container *ngIf="filter$ | async as filter">
-    <ul>
-      <li><a href="javascript:" [class.active]="filter==FILTER.ALL" (click)="filterAll()">ALL ({{ count.all }})</a></li>
-      <li><a href="javascript:" [class.active]="filter==FILTER.UNCOMPLETED" (click)="filterUncompleted()">ACTIVE ({{ count.uncompleted }})</a></li>
-      <li><a href="javascript:" [class.active]="filter==FILTER.COMPLETED" (click)="filterCompleted()">COMPLETED ({{ count.completed }})</a></li>
-    </ul>
-  </ng-container>
-</ng-container>
+<ul>
+  <li><a href="javascript:" [class.active]="todoService.filter==FILTER.ALL" (click)="filterAll()">ALL ({{ todoService.count.all }})</a></li>
+  <li><a href="javascript:" [class.active]="todoService.filter==FILTER.UNCOMPLETED" (click)="filterUncompleted()">ACTIVE ({{ todoService.count.uncompleted }})</a></li>
+  <li><a href="javascript:" [class.active]="todoService.filter==FILTER.COMPLETED" (click)="filterCompleted()">COMPLETED ({{ todoService.count.completed }})</a></li>
+</ul>
 
 <p>
   <input type="text" placeholder="Search" #searchInput />
@@ -25,7 +20,7 @@
 
 
 <table border="0">
-  <tr *ngFor="let todo of (todos$ | async)">
+  <tr *ngFor="let todo of todoService.filteredTodos">
     <td><input type="checkbox" [checked]="todo.completed" (click)="toggle(todo)" /></td>
     <td width="200"><span [class.completed]="todo.completed">{{ todo.title }}</span></td>
     <td><button (click)="remove(todo)">remove</button></td>

@@ -12,14 +12,11 @@ import 'rxjs/add/observable/fromEvent'
 })
 export class SimpleTodoComponent implements OnInit {
   FILTER = FILTER
-  todos$ = this.todoService.todos$
-  count$ = this.todoService.count$
-  filter$ = this.todoService.filter$
-  
+
   @ViewChild('searchInput')
   searchInput: ElementRef
 
-  constructor(private todoService: TodoService) { }
+  constructor(public todoService: TodoService) { }
 
   ngOnInit() {
     // angular not support oninput, so we need to bind it from scratch

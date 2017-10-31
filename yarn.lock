@@ -4843,6 +4843,10 @@ tar@^2.0.0, tar@^2.2.1:
     fstream "^1.0.2"
     inherits "2"
 
+tassign@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/tassign/-/tassign-1.0.0.tgz#a768f9875a0fccc15f03d68b4ac02060415e479d"
+
 temp@0.8.3:
   version "0.8.3"
   resolved "https://registry.yarnpkg.com/temp/-/temp-0.8.3.tgz#e0c6bc4d26b903124410e4fed81103014dfc1f59"

@@ -2,81 +2,26 @@ import { Injectable } from '@angular/core'
 import { Observable } from 'rxjs/Observable'
 import { Store } from '../libs/store'
 import { TodoState, Todo, FILTER } from './todo'
+import { tassign } from 'tassign'
+import { observable, action, computed } from 'mobx'
+
 
 @Injectable()
-export class TodoService extends Store<TodoState> {
+export class TodoService {
+  @observable todos: Todo[] = []
+  @observable showCompleted = true
+  @observable filter = FILTER.ALL
+  @observable search = ''
+
   /**
    * keep track of todo id
    */
-  increment: number
+  increment = 0
 
-  constructor() {
-    super(new TodoState);
-    this.increment = 0
-  }
-
-  /**
-   * Observable of list of todo displaying to the user
-   * filtering will be applied before emitting
-   *
-   * this filter depends on state.todos and state.showCompleted
-   * so, we need to watch for these values changes before applying the filter
-   */
-  readonly todos$ = this.select(state => ({
-      todos: state.todos,
-      filter: state.filter,
-      search: state.search
-    }))
-    .map(this.applyFilter)
-
-  /**
-   * Observable of TodoCounter
-   */
-  readonly count$ = this.map(state => ({
-      all: state.todos.length,
-      completed: state.todos.filter(todo => todo.completed).length,
-      uncompleted: state.todos.filter(todo => !todo.completed).length,
-    }))
-
-  readonly filter$ = this.select(state => state.filter)
-
-  addTodo(title: string) {
-    const todos = [...this.state.todos, new Todo(this.increment++, title)]
-    this.setState({ todos })
-  }
-
-  toggleTodo(todo: Todo) {
-    const mapper = (item) => (
-      item.id == todo.id
-        ? Object.assign({}, item, { completed: !todo.completed })
-        : item
-    )
-    this.setState({ todos: this.state.todos.map(mapper) })
-  }
-
-  removeTodo(todo: Todo) {
-    const todos = this.state.todos.filter(item => item.id != todo.id)
-    this.setState({ todos })
-  }
-
-  clearAllTodo() {
-    this.setState({ todos: [] })
-  }
-
-  setFilter(filter: number) {
-    if ((<any>Object).values(FILTER).indexOf(filter) !== -1) {
-      this.setState({ filter })
-    }
-  }
-
-  setSearch(search: string) {
-    this.setState({ search })
-  }
-
-  protected applyFilter(state: TodoState) {
-    return state.todos.filter(todo => {
+  @computed get filteredTodos() {
+    const filterFn = (todo: Todo) => {
       let passed: boolean = null;
-      switch (state.filter) {
+      switch (this.filter) {
         case FILTER.ALL:
           passed = true
           break;
@@ -87,7 +32,47 @@ export class TodoService extends Store<TodoState> {
           passed = todo.completed == false
           break;
       }
-      return passed && todo.title.indexOf(state.search) !== -1
-    })
+      return passed && todo.title.indexOf(this.search) !== -1
+    }
+
+    return this.todos.filter(filterFn)
+  }
+
+  @computed get count() {
+    return {
+      all: this.todos.length,
+      completed: this.todos.filter(todo => todo.completed).length,
+      uncompleted: this.todos.filter(todo => !todo.completed).length,
+    }
+  }
+
+  @action addTodo(title: string) {
+    this.todos.push(new Todo(this.increment++, title))
+  }
+
+  @action toggleTodo(todo: Todo) {
+    this.todos = this.todos.map((item) => (
+      item.id == todo.id
+        ? tassign(item, { completed: !todo.completed })
+        : item
+    ))
+  }
+
+  @action removeTodo(todo: Todo) {
+    this.todos = this.todos.filter(item => item.id != todo.id)
+  }
+
+  @action clearAllTodo() {
+    this.todos = []
+  }
+
+  @action setFilter(filter: number) {
+    if ((<any>Object).values(FILTER).indexOf(filter) !== -1) {
+      this.filter = filter
+    }
+  }
+
+  @action setSearch(search: string) {
+    this.search = search
   }
 }
