@@ -1,0 +1,24 @@
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+ul > li {
+  display: inline-block;
+}
+ul > li:after {
+  content: '|';
+  display: inline-block;
+  margin-left: 5px;
+}
+ul > li:last-child:after {
+  display: none;
+}
+ul > li > a {
+  text-decoration: none;
+}
+ul > li > a.active {
+  text-decoration: underline;
+}
+.completed {
+  text-decoration: line-through;
+}

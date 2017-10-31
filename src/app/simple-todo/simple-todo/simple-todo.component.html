@@ -1,0 +1,33 @@
+<h1>Todo List</h1>
+
+<form name="todo-form" (submit)="add(newTodo);">
+  <p>
+    <input type="text" #newTodo placeholder="Let's add something cool ;)">
+    <button type="submit">add todo</button>
+    <button (click)="clear()">clear all</button>
+  </p>
+</form>
+
+<!-- ugly but work -->
+<ng-container *ngIf="count$ | async as count">
+  <ng-container *ngIf="filter$ | async as filter">
+    <ul>
+      <li><a href="#" [class.active]="filter==FILTER.ALL" (click)="filterAll()">ALL ({{ count.all }})</a></li>
+      <li><a href="#" [class.active]="filter==FILTER.UNCOMPLETED" (click)="filterUncompleted()">UNCOMPLETED ({{ count.uncompleted }})</a></li>
+      <li><a href="#" [class.active]="filter==FILTER.COMPLETED" (click)="filterCompleted()">COMPLETED ({{ count.completed }})</a></li>
+    </ul>
+  </ng-container>
+</ng-container>
+
+<p>
+  <input type="text" placeholder="Search" #searchInput />
+</p>
+
+
+<table border="0">
+  <tr *ngFor="let todo of (todos$ | async)">
+    <td><input type="checkbox" [checked]="todo.completed" (click)="toggle(todo)" /></td>
+    <td width="200"><span [class.completed]="todo.completed">{{ todo.title }}</span></td>
+    <td><button (click)="remove(todo)">remove</button></td>
+  </tr>
+</table>
