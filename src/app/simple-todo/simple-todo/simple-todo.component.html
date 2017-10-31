@@ -1,28 +1,30 @@
-<h1>Todo List</h1>
+<div *mobxAutorun>
+  <h1>Todo List</h1>
 
-<form name="todo-form" (submit)="add(newTodo);">
+  <form name="todo-form" (submit)="add(newTodo);">
+    <p>
+      <input type="text" #newTodo placeholder="Let's add something cool ;)">
+      <button type="submit">add todo</button>
+      <button (click)="clear()">clear all</button>
+    </p>
+  </form>
+
+  <ul>
+    <li><a href="javascript:" [class.active]="todoService.filter==FILTER.ALL" (click)="filterAll()">ALL ({{ todoService.count.all }})</a></li>
+    <li><a href="javascript:" [class.active]="todoService.filter==FILTER.UNCOMPLETED" (click)="filterUncompleted()">ACTIVE ({{ todoService.count.uncompleted }})</a></li>
+    <li><a href="javascript:" [class.active]="todoService.filter==FILTER.COMPLETED" (click)="filterCompleted()">COMPLETED ({{ todoService.count.completed }})</a></li>
+  </ul>
+
   <p>
-    <input type="text" #newTodo placeholder="Let's add something cool ;)">
-    <button type="submit">add todo</button>
-    <button (click)="clear()">clear all</button>
+    <input type="text" placeholder="Search" #searchInput />
   </p>
-</form>
-
-<ul>
-  <li><a href="javascript:" [class.active]="todoService.filter==FILTER.ALL" (click)="filterAll()">ALL ({{ todoService.count.all }})</a></li>
-  <li><a href="javascript:" [class.active]="todoService.filter==FILTER.UNCOMPLETED" (click)="filterUncompleted()">ACTIVE ({{ todoService.count.uncompleted }})</a></li>
-  <li><a href="javascript:" [class.active]="todoService.filter==FILTER.COMPLETED" (click)="filterCompleted()">COMPLETED ({{ todoService.count.completed }})</a></li>
-</ul>
-
-<p>
-  <input type="text" placeholder="Search" #searchInput />
-</p>
 
 
-<table border="0">
-  <tr *ngFor="let todo of todoService.filteredTodos">
-    <td><input type="checkbox" [checked]="todo.completed" (click)="toggle(todo)" /></td>
-    <td width="200"><span [class.completed]="todo.completed">{{ todo.title }}</span></td>
-    <td><button (click)="remove(todo)">remove</button></td>
-  </tr>
-</table>
+  <table border="0">
+    <tr *ngFor="let todo of todoService.filteredTodos">
+      <td><input type="checkbox" [checked]="todo.completed" (click)="toggle(todo)" /></td>
+      <td width="200"><span [class.completed]="todo.completed">{{ todo.title }}</span></td>
+      <td><button (click)="remove(todo)">remove</button></td>
+    </tr>
+  </table>
+</div>

@@ -3121,6 +3121,10 @@ mkdirp@0.5.x, "mkdirp@>=0.5 0", mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.5.0, mkd
   dependencies:
     minimist "0.0.8"
 
+mobx-angular@^1.8.1:
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/mobx-angular/-/mobx-angular-1.8.1.tgz#a35ac5e5ec2fe771395c20510898ae63104a8b15"
+
 mobx-logger@^0.6.0:
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/mobx-logger/-/mobx-logger-0.6.0.tgz#caa2d4a65257aa0a782d6f884e6207b834408122"

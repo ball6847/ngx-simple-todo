@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable'
 import { TodoService } from '../todo.service'
 import { TodoCounter, Todo, FILTER } from '../todo'
@@ -10,7 +10,7 @@ import 'rxjs/add/observable/fromEvent'
   styleUrls: ['./simple-todo.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SimpleTodoComponent implements OnInit {
+export class SimpleTodoComponent implements OnInit, AfterViewInit {
   FILTER = FILTER
 
   @ViewChild('searchInput')
@@ -19,6 +19,9 @@ export class SimpleTodoComponent implements OnInit {
   constructor(public todoService: TodoService) { }
 
   ngOnInit() {
+  }
+
+  ngAfterViewInit() {
     // angular not support oninput, so we need to bind it from scratch
     Observable.fromEvent(this.searchInput.nativeElement, 'input')
       .subscribe((event: Event) => {

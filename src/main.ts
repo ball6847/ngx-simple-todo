@@ -5,9 +5,18 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
 import { hmrBootstrap } from './hmr';
+import { enableLogging } from 'mobx-logger';
 
 if (environment.production) {
   enableProdMode();
+} else {
+  enableLogging({
+    predicate: () => true,
+    action: true,
+    reaction: true,
+    transaction: true,
+    compute: true
+  })
 }
 
 const bootstrap = () => platformBrowserDynamic().bootstrapModule(AppModule)
